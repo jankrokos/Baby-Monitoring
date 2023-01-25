@@ -2,6 +2,7 @@ package com.example.babywatchpro;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
 import android.util.Log;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -12,10 +13,14 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+
 import androidx.core.app.NotificationCompat;
 
-public class FirebaseService extends FirebaseMessagingService
-{
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+public class FirebaseService extends FirebaseMessagingService {
     private String TAG = "FirebaseService";
 
     public static final String NOTIFICATION_CHANNEL_ID = "nh-demo-channel-id";
@@ -35,47 +40,51 @@ public class FirebaseService extends FirebaseMessagingService
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
+
         String nhMessage;
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
 
             nhMessage = remoteMessage.getNotification().getBody();
-        }
-        else {
+        } else {
             nhMessage = remoteMessage.getData().values().iterator().next();
         }
 
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
         if (MainActivity.isVisible) {
-            MainActivity.mainActivity.ToastNotify(nhMessage);
+            MainActivity.mainActivity.handleNewMeasurement(nhMessage);
         }
         sendNotification(nhMessage);
     }
 
     private void sendNotification(String msg) {
 
-        Intent intent = new Intent(ctx, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        if (!msg.startsWith("Temperature")) {
+            Intent intent = new Intent(ctx, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        mNotificationManager = (NotificationManager)
-                ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotificationManager = (NotificationManager)
+                    ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0,
-                intent, PendingIntent.FLAG_ONE_SHOT);
+            PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0,
+                    intent, PendingIntent.FLAG_ONE_SHOT);
 
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
-                ctx,
-                NOTIFICATION_CHANNEL_ID)
-                .setContentText(msg)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setSmallIcon(android.R.drawable.ic_popup_reminder)
-                .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL);
+            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
+                    ctx,
+                    NOTIFICATION_CHANNEL_ID)
+                    .setContentText(msg)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setSmallIcon(android.R.drawable.ic_popup_reminder)
+                    .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL);
 
-        notificationBuilder.setContentIntent(contentIntent);
-        mNotificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+            notificationBuilder.setContentIntent(contentIntent);
+
+
+            mNotificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+        }
     }
 
     public static void createChannelAndHandleNotifications(Context context) {

@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">Baby Watch Pro</string>
+    <string name="temperature">Temperature</string>
+    <string name="temperature2"><b>Temperature:</b></string>
+    <string name="_12_34_c">12.34*C</string>
+    <string name="altitude"><b>Altitude:</b></string>
+    <string name="_225m">225m</string>
+    <string name="_12_34_cdsads">12.34°C</string>
+    <string name="_12_34_cel">12.34°C</string>
+    <string name="humidity"><b>Humidity:</b></string>
+    <string name="pressure"><b>Pressure:</b></string>
+    <string name="_37_12">37.12%</string>
+    <string name="_1012hpa">1012hPa</string>
+    <string name="last_measurement_12_34_56_01_may_2025">Last measurement: 12:34:56 01 May 2025</string>
+    <string name="retrieving_data_from_baby_watch_pro_device">Retrieving data from Baby Watch Pro device...</string>
 </resources>

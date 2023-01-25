@@ -11,6 +11,7 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.microsoft.windowsazure.messaging.NotificationHub;
 import java.util.concurrent.TimeUnit;
 
+@SuppressWarnings("deprecation")
 public class RegistrationIntentService extends IntentService {
 
     private static final String TAG = "RegIntentService";
@@ -92,7 +93,7 @@ public class RegistrationIntentService extends IntentService {
 
         // Notify UI that registration has completed.
         if (MainActivity.isVisible) {
-            MainActivity.mainActivity.ToastNotify(resultString);
+            MainActivity.mainActivity.handleNewMeasurement(resultString);
         }
     }
 }
